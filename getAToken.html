@@ -7,32 +7,32 @@
 </head>
 <body>
     <h1>Autenticazione Completata</h1>
-    <p>Premi il pulsante qui sotto per copiare il token negli appunti.</p>
+    <p>Premi il pulsante qui sotto per copiare il codice negli appunti.</p>
 
-    <button id="copyTokenButton">Copia Token</button>
+    <button id="copyCodeButton">Copia Codice</button>
     <p id="statusMessage"></p>
 
     <script>
-        // Estrarre il token dall'URL (in caso sia presente come hash)
-        const params = new URLSearchParams(window.location.hash.substring(1));
-        const token = params.get("access_token");
+        // Estrarre il codice dall'URL (come query string, non hash)
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
 
-        if (token) {
-            // Mostra un messaggio che il token è stato trovato
-            document.getElementById("statusMessage").textContent = "Token trovato! Premi il pulsante per copiarlo.";
+        if (code) {
+            // Mostra un messaggio che il codice è stato trovato
+            document.getElementById("statusMessage").textContent = "Codice trovato! Premi il pulsante per copiarlo.";
             
-            document.getElementById("copyTokenButton").addEventListener("click", () => {
-                // Copia il token negli appunti
-                navigator.clipboard.writeText(token).then(() => {
-                    document.getElementById("statusMessage").textContent = "Token copiato negli appunti!";
+            document.getElementById("copyCodeButton").addEventListener("click", () => {
+                // Copia il codice negli appunti
+                navigator.clipboard.writeText(code).then(() => {
+                    document.getElementById("statusMessage").textContent = "Codice copiato negli appunti!";
                 }).catch(err => {
-                    document.getElementById("statusMessage").textContent = "Errore nel copiare il token: " + err;
+                    document.getElementById("statusMessage").textContent = "Errore nel copiare il codice: " + err;
                 });
             });
         } else {
-            // Se il token non è presente nell'URL, mostra un messaggio di errore
-            document.getElementById("statusMessage").textContent = "Token non trovato nell'URL. Riprova l'autenticazione.";
-            document.getElementById("copyTokenButton").style.display = "none"; // Nasconde il pulsante
+            // Se il codice non è presente nell'URL, mostra un messaggio di errore
+            document.getElementById("statusMessage").textContent = "Codice non trovato nell'URL. Riprova l'autenticazione.";
+            document.getElementById("copyCodeButton").style.display = "none"; // Nasconde il pulsante
         }
     </script>
 </body>
