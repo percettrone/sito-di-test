@@ -10,6 +10,7 @@
     <p>Premi il pulsante qui sotto per copiare il codice negli appunti.</p>
 
     <button id="copyCodeButton">Copia Codice</button>
+    <button id="revokeTokenButton">Revoca Token e Disconnetti</button>
     <p id="statusMessage"></p>
 
     <script>
@@ -25,24 +26,6 @@
                 // Copia il codice negli appunti
                 navigator.clipboard.writeText(code).then(() => {
                     document.getElementById("statusMessage").textContent = "Codice copiato negli appunti!";
-
-                    // Cancella i cookie e la cache per forzare una nuova autenticazione
-                    document.cookie.split(";").forEach(cookie => {
-                        const name = cookie.split("=")[0].trim();
-                        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
-                    });
-
-                    // Richiesta per cancellare la cache
-                    if ('caches' in window) {
-                        caches.keys().then(cacheNames => {
-                            cacheNames.forEach(cacheName => {
-                                caches.delete(cacheName);
-                            });
-                        });
-                    }
-
-                    // Notifica di completamento
-                    console.log("Cookie e cache cancellati dopo la copia del codice.");
                 }).catch(err => {
                     document.getElementById("statusMessage").textContent = "Errore nel copiare il codice: " + err;
                 });
@@ -52,6 +35,27 @@
             document.getElementById("statusMessage").textContent = "Codice non trovato nell'URL. Riprova l'autenticazione.";
             document.getElementById("copyCodeButton").style.display = "none"; // Nasconde il pulsante
         }
+
+        // Aggiungi la logica per il pulsante di revoca del token
+        document.getElementById("revokeTokenButton").addEventListener("click", () => {
+            // Logica per cancellare i cookie
+            document.cookie.split(";").forEach(cookie => {
+                const name = cookie.split("=")[0].trim();
+                document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
+            });
+
+            // Cancella la cache
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    cacheNames.forEach(cacheName => {
+                        caches.delete(cacheName);
+                    });
+                });
+            }
+
+            // Reindirizza alla pagina di logout di Microsoft
+            window.location.href = "https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=" + encodeURIComponent(window.location.origin);
+        });
     </script>
 </body>
 </html>
