@@ -25,24 +25,6 @@
                 // Copia il codice negli appunti
                 navigator.clipboard.writeText(code).then(() => {
                     document.getElementById("statusMessage").textContent = "Codice copiato negli appunti!";
-
-                    // Cancella i cookie e la cache per forzare una nuova autenticazione
-                    document.cookie.split(";").forEach(cookie => {
-                        const name = cookie.split("=")[0].trim();
-                        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
-                    });
-
-                    // Richiesta per cancellare la cache
-                    if ('caches' in window) {
-                        caches.keys().then(cacheNames => {
-                            cacheNames.forEach(cacheName => {
-                                caches.delete(cacheName);
-                            });
-                        });
-                    }
-
-                    // Notifica di completamento
-                    console.log("Cookie e cache cancellati dopo la copia del codice.");
                 }).catch(err => {
                     document.getElementById("statusMessage").textContent = "Errore nel copiare il codice: " + err;
                 });
